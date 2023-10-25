@@ -1,0 +1,42 @@
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    command: >
+          sh -c "
+          sleep 10 &&
+          python manage.py makemigrations &&
+          python manage.py migrate && 
+          python manage.py runserver 0.0.0.0:8000"
+    environment:
+      MYSQL_DATABASE: 'mariadb'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'password'
+    volumes:
+      - .:/app
+    depends_on:
+      - redis  # Depend on the Redis servic
+      -  db
+  
+  redis:
+    image: redis:latest  # Use the official Redis image
+    ports:
+      - "6379:6379"  # Map Redis container port to host port
+
+  db:
+    image: mariadb:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: password  # Set the MariaDB root password
+      MYSQL_DATABASE: mariadb  # Create the database
+      MYSQL_USER: user  # Create a user for your Django app
+      MYSQL_PASSWORD: password  # Set the user's password
+  
+  auth_service:
+    build:
+      context: ../auth-service  # Use the directory where your Python code and Dockerfile are located
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5000"  # Map container port to host port

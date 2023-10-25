@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Statistics</title>
+</head>
+<body>
+    <h1>Statistics</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Request Path</th>
+                <th>User</th>
+                <th>IP Address</th>
+                <th>Response Time (s)</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for stat in statistics_data %}
+                <tr>
+                    <td>{{ stat.request_path }}</td>
+                    <td>{{ stat.user }}</td>
+                    <td>{{ stat.ip_address }}</td>
+                    <td>{{ stat.response_time }}</td>
+                    <td>{{ stat.timestamp }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
